@@ -5780,11 +5780,16 @@ async fn start_ipc(
     if stream.is_none() {
         #[allow(unused_mut)]
         #[allow(unused_assignments)]
-        let mut args = vec!["--cm-no-ui"];
+        let mut args = vec!["--cm"];
+        #[cfg(target_os = "windows")]
         if let Ok(exe_path) = std::env::current_exe() {
             if let Some(dir) = exe_path.parent() {
-                if dir.join("use_ui").exists() || dir.join("used_ui").exists() {
+                // 如果是标准绿色版或强行指定开启UI，则使用 --cm
+                if dir.join("data").exists() || dir.join("use_ui").exists() || dir.join("used_ui").exists() {
                     args = vec!["--cm"];
+                } else {
+                    // 如果删除了 data 文件夹且没有开启标志，则回退到无头模式防止崩溃
+                    args = vec!["--cm-no-ui"];
                 }
             }
         }
