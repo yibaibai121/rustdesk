@@ -1948,7 +1948,18 @@ pub fn add_recent_document(path: &str) {
 
 pub fn is_installed() -> bool {
     let (_, _, _, exe) = get_install_info();
-    std::fs::metadata(exe).is_ok()
+    if std::fs::metadata(exe).is_ok() {
+        return true;
+    }
+    
+    if let Ok(current_exe) = std::env::current_exe() {
+        let exe_str = current_exe.to_string_lossy().to_lowercase();
+        if exe_str.contains("ezlink") {
+            return true;
+        }
+    }
+    
+    false
 }
 
 pub fn get_reg(name: &str) -> String {
