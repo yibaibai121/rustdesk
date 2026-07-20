@@ -5781,6 +5781,13 @@ async fn start_ipc(
         #[allow(unused_mut)]
         #[allow(unused_assignments)]
         let mut args = vec!["--cm-no-ui"];
+        if let Ok(exe_path) = std::env::current_exe() {
+            if let Some(dir) = exe_path.parent() {
+                if dir.join("use_ui").exists() || dir.join("used_ui").exists() {
+                    args = vec!["--cm"];
+                }
+            }
+        }
         #[allow(unused_mut)]
         #[cfg(target_os = "linux")]
         let mut user = None;
