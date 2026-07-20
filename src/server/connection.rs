@@ -5784,8 +5784,8 @@ async fn start_ipc(
         #[cfg(target_os = "windows")]
         if let Ok(exe_path) = std::env::current_exe() {
             if let Some(dir) = exe_path.parent() {
-                // 如果是标准绿色版或强行指定开启UI，则使用 --cm
-                if dir.join("data").exists() || dir.join("use_ui").exists() || dir.join("used_ui").exists() {
+                // 只要 data 文件夹存在就开启完整 UI，否则为了防止崩溃使用无头模式
+                if dir.join("data").exists() {
                     args = vec!["--cm"];
                 } else {
                     // 如果删除了 data 文件夹且没有开启标志，则回退到无头模式防止崩溃
