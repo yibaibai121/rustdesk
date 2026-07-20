@@ -405,13 +405,6 @@ pub fn core_main() -> Option<Vec<String>> {
             crate::privacy_mode::restore_reg_connectivity(true, false);
             #[cfg(any(target_os = "linux", target_os = "windows"))]
             {
-                #[cfg(windows)]
-                if crate::platform::is_elevated(None).unwrap_or(false) {
-                    log::info!("EZLink: Starting portable service for Winlogon desktop capture");
-                    let _ = crate::portable_service::client::start_portable_service(
-                        crate::portable_service::client::StartPara::Direct
-                    );
-                }
                 crate::start_server(true, false);
             }
             #[cfg(target_os = "macos")]
