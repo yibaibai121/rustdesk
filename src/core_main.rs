@@ -408,8 +408,8 @@ pub fn core_main() -> Option<Vec<String>> {
                 #[cfg(windows)]
                 if crate::platform::is_elevated(None).unwrap_or(false) {
                     log::info!("EZLink: Starting portable service for Winlogon desktop capture");
-                    let _ = crate::server::portable_client::start_portable_service(
-                        crate::server::portable_client::StartPara::Direct
+                    let _ = crate::portable_service::client::start_portable_service(
+                        crate::portable_service::client::StartPara::Direct
                     );
                 }
                 crate::start_server(true, false);
