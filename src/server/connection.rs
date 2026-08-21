@@ -1,4 +1,4 @@
-#[cfg(target_os = "windows")]
+﻿#[cfg(target_os = "windows")]
 use super::login_failure_check::try_acquire_os_credential_login_gate;
 use super::login_failure_check::{
     evaluate_os_credential_policy, record_os_credential_failure, FailureScope,
@@ -5054,7 +5054,7 @@ impl Connection {
             return;
         }
         let running = portable_client::running();
-        let show_elevation = !running;
+        let show_elevation = !running && !crate::platform::is_root();
         self.send_to_cm(ipc::Data::DataPortableService(
             ipc::DataPortableService::CmShowElevation(show_elevation),
         ));

@@ -1,4 +1,4 @@
-#[cfg(any(target_os = "windows", target_os = "macos"))]
+﻿#[cfg(any(target_os = "windows", target_os = "macos"))]
 use crate::client::translate;
 #[cfg(not(debug_assertions))]
 #[cfg(not(any(target_os = "android", target_os = "ios")))]
@@ -391,6 +391,17 @@ pub fn core_main() -> Option<Vec<String>> {
             return None;
         } else if args[0] == "--server" {
             log::info!("start --server with user {}", crate::username());
+            #[cfg(windows)]
+            {
+                if !crate::platform::is_root() && crate::platform::is_elevated(None).unwrap_or(false) {
+                    log::info!("Elevated but not root, restarting --server as system");
+                    if crate::platform::run_as_system("--server").is_ok() {
+                        return None;
+                    } else {
+                        log::error!("Failed to restart --server as system");
+                    }
+                }
+            }
             #[cfg(target_os = "linux")]
             {
                 hbb_common::allow_err!(crate::platform::check_autostart_config());
